@@ -18,11 +18,15 @@ public class CubeController : MonoBehaviour
 
     //無敵状態変数
     static public bool isStrongState = false;
-    private float time=10f;
+    //private float time;
+    public float time;
+    public float previousTime=0;
 
     // Use this for initialization
     void Start()
     {
+        //time = 10f;  //   なぜか11～12秒で10秒にもどってしまう。
+        time = Time.unscaledTime;
     }
 
     // Update is called once per frame
@@ -36,19 +40,32 @@ public class CubeController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        //無敵の10秒間
+        time += Time.deltaTime;
+        //if (time < 10f) { Destroy(this.gameObject); }
+
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         string yourTag = collision.gameObject.tag;
 
+
+        Debug.Log("StrongStateは" + isStrongState);
         if (yourTag == "Player_Tag" && isStrongState==true) {
-            time = 0f;
+            //time = 0f;　        //なぜか1回0sになるだけ。次には10.4秒ぐらいになっている。→最初の宣言で0にしていたので、それが入っていただけのよう、つまりここは全く通っていない。
+            Debug.Log("StrongStateはここでも" + isStrongState);
+            previousTime = time;  //これが働かない！！　これもUpdateにいれないといけないようだ。 →　多分違う。上のDebug.Logは働いているが、ここからまた次の次の下にいくと0になっている。
             isStrongState = false;  //ﾀｲﾏｽﾀｰﾄのﾄﾘｶﾞにつかうので時間だけｾｯﾄしてすぐに戻す
         }
 
-        time += Time.deltaTime;
-        if (time < 10f) { Destroy(this.gameObject); }
+
+        Debug.Log(time);
+        Debug.Log(previousTime);
+       // time += Time.deltaTime;
+        if (time-previousTime < 3f　&& (yourTag=="Player_Tag")) { Destroy(this.gameObject); }
 
 
 
