@@ -16,17 +16,17 @@ public class CubeController : MonoBehaviour
 
     //GameObject myPlayer = GameObject.Find("UnityChan2D");
 
-    //無敵状態変数
-    static public bool isStrongState = false;
+    //無敵状態変数　　はUnityChanControllerにもっていく
+    //static public bool isStrongState = false;
     //private float time;
-    public float time;
-    public float previousTime=0;
+    //public float time;
+    //public float previousTime=0;
 
     // Use this for initialization
     void Start()
     {
-        //time = 10f;  //   なぜか11～12秒で10秒にもどってしまう。
-        time = Time.unscaledTime;
+        //time = 10f;  //   なぜか11～12秒で10秒にもどってしまう。   無敵処理はUnitychanContorollerにもっていく
+       // time = Time.unscaledTime;
     }
 
     // Update is called once per frame
@@ -41,9 +41,9 @@ public class CubeController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //無敵の10秒間
-        time += Time.deltaTime;
-        //if (time < 10f) { Destroy(this.gameObject); }
+        //無敵の10秒間　　はUnitychanControllerに持っていく
+        //time += Time.deltaTime;
+  
 
 
     }
@@ -51,6 +51,8 @@ public class CubeController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         string yourTag = collision.gameObject.tag;
+        /*無敵処理は UnityChanControllerにもっていく
+       
 
 
         Debug.Log("StrongStateは" + isStrongState);
@@ -66,7 +68,7 @@ public class CubeController : MonoBehaviour
         Debug.Log(previousTime);
        // time += Time.deltaTime;
         if (time-previousTime < 3f　&& (yourTag=="Player_Tag")) { Destroy(this.gameObject); }
-
+        */
 
 
 
@@ -79,7 +81,7 @@ public class CubeController : MonoBehaviour
            // string yourTag = collision.gameObject.tag;
 
 
-            Debug.Log(yourTag);     //OKだった・・・
+//            Debug.Log(yourTag);     //OKだった・・・
 
             // ボリュームを0.3にする（追加）
             //GetComponent<AudioSource>().volume = 0.3f;
@@ -95,7 +97,7 @@ public class CubeController : MonoBehaviour
 
                 AudioClip clip = gameObject.GetComponent<AudioSource>().clip;
                 gameObject.GetComponent<AudioSource>().PlayOneShot(clip);       //このままでは多くなりすぎてしまう！一回なったらなくしたい！→isAlreadyPlayedを追加→できた！！
-                Debug.Log("Played by the other Cube");
+                //Debug.Log("Played by the other Cube");
             }
             else if (yourTag == "Ground_Tag")
             {
@@ -103,7 +105,7 @@ public class CubeController : MonoBehaviour
                 // this.GetComponent<AudioSource>().PlayOneShot(block);
                 AudioClip clip = gameObject.GetComponent<AudioSource>().clip;
                 gameObject.GetComponent<AudioSource>().PlayOneShot(clip);
-                Debug.Log("Played by the Ground");
+                //Debug.Log("Played by the Ground");
 
             }
             //

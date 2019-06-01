@@ -21,8 +21,17 @@ public class UnityChanController : MonoBehaviour
     // ゲームオーバになる位置
     private float deadLine = -9;
 
-   // public bool isStrongState = false;
-   // private float time;
+    // public bool isStrongState = false;
+    // private float time;
+
+    //無敵状態変数　　はUnityChanControllerにもっていく
+    static public bool isStrongState = false;
+    //private float time;
+    public float time;          
+  
+    // 無敵時移動速度
+    private float speed = 0.0f;
+    private float strongTime = 10.0f;
 
     // Use this for initialization
     void Start()
@@ -32,37 +41,14 @@ public class UnityChanController : MonoBehaviour
         // Rigidbody2Dのコンポーネントを取得する
         this.rigid2D = GetComponent<Rigidbody2D>();
 
+        time = 10f;  //      無敵処理はUnitychanContorollerにもっていく
+  
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        /*レイヤーをかえる作戦が無理だったので、無敵処理は　CubeControllerに書く
-
-        //無敵処理（レイヤーを変える）→レイヤーを変えても衝突はする！
-        if (isStrongState) { //this.gameObject.layer = 2;
-            time = 0;
-            Debug.Log(gameObject.layer);
-            Debug.Log(isStrongState);
-            isStrongState = false;  //ﾄﾘｶﾞに使うので一瞬だけここのif文を実行するのですぐにfalseに戻す
-        }
-
-        //セットしたタイマーを減らす
-        time += Time.deltaTime;
-        //ボツ、レイヤーを変えても衝突はするため
-        if (time < 10f) { this.gameObject.layer = 2;
-        }
-        else
-        {
-            this.gameObject.layer = 1;
-        }
-
-        */
-
-
-
 
         // 走るアニメーションを再生するために、Animatorのパラメータを調節する
         this.animator.SetFloat("Horizontal", 1);
@@ -100,5 +86,41 @@ public class UnityChanController : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //無敵の10秒間　　はUnitychanControllerに持っていく
+        time += Time.deltaTime;
+        // 無敵の間少し前に移動させる
+        if (time  < strongTime && this.transform.position.x < -2.9f) { this.rigid2D.AddForce(new Vector2(1.0f, 0)); ; }
     }
+
+    //浮ケ谷さんのｱﾄﾞﾊﾞｲｽにより、無敵化をこっちに移す
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Star_Tag")
+        {
+
+            Debug.Log("Got a star!");
+            Destroy(collision.gameObject);
+
+            //無敵にする
+            UnityChanController.isStrongState = true;
+            time = 0f;
+            isStrongState = false;  //ﾀｲﾏｽﾀｰﾄのﾄﾘｶﾞにつかうので時間だけｾｯﾄしてすぐに戻す
+            strongTime *= 0.7f;
+        }
+    }
+
+
+
+
+    //浮ケ谷さんのｱﾄﾞﾊﾞｲｽにより、無敵化をこっちに移す
+    private void OnCollisionEnter2D(Collision2D collision)  //OnTrigger→OnCollision  Corider2D→Collision2D
+    {
+        string yourTag = collision.gameObject.tag;
+
+        //無敵処理は UnityChanControllerにもっていく
+        if (time < strongTime　&& (yourTag=="Cube_Tag")) { Destroy(collision.gameObject); }
+    }
+
+
+
 }

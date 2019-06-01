@@ -9,18 +9,18 @@ public class StarController : MonoBehaviour
     // 消滅位置
     private float deadLine = -10;
 
-    GameObject myplayer;
+    //GameObject myplayer;
 
     // Start is called before the first frame update
     void Start()
     {
-        myplayer = GameObject.Find("UnityChan2D"); 
+        //myplayer = GameObject.Find("UnityChan2D"); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        // キューブを移動させる
+        // 星を移動させる
         transform.Translate(this.speed, 0, 0);
 
         // 画面外に出たら破棄する
@@ -29,6 +29,14 @@ public class StarController : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    //浮ケ谷さん
+    //previousTimeはそれぞれのcubeが持っています。
+   // 無敵状態で衝突したcubeであれば ｀previousTime = time｀ が実行されるので
+        //previousTimeにtimeが代入されますが、それ以外のcubeは代入が実行されないので0という状態になっています。
+        //というアドバイスをいただいた。 UnitychanCOntrollerにもっていく
+        //ここの衝突判定はここでいいだろう　　→　判定処理の時の　timeを０に戻す関係で、UnityChanControllerに移す
+/*
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player_Tag")
@@ -41,11 +49,11 @@ public class StarController : MonoBehaviour
             //レイヤーをかえる作戦が無理だったので、無敵処理は　CubeControllerに書く
             //myplayer.GetComponent<UnityChanController>().isStrongState = true;
             //全てのｲﾝｽﾀﾝｽを取得するのが面倒なので static の変数にする。UnitychanとあたったらDestroyする
-            CubeController.isStrongState = true;
-            
+            UnityChanController.isStrongState = true;
+            //Debug.Log(UnityChanController.isStrongState);
         }
     }
-
+*/
 
 
 }
